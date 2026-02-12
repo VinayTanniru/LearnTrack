@@ -9,7 +9,7 @@ import com.airtribe.learntrack.service.CourseService;
 import com.airtribe.learntrack.service.EnrollmentService;
 import com.airtribe.learntrack.service.StudentService;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles all enrollment management menu operations.
@@ -85,7 +85,7 @@ class EnrollmentMenuHandler {
         console.printHeader("Enroll Student in Course");
 
         // Show available students
-        ArrayList<Student> students = studentService.getActiveStudents();
+        List<Student> students = studentService.getActiveStudents();
         if (students.isEmpty()) {
             System.out.println("No active students available. Please add a student first.");
             return;
@@ -96,7 +96,7 @@ class EnrollmentMenuHandler {
         }
 
         // Show available courses
-        ArrayList<Course> courses = courseService.getActiveCourses();
+        List<Course> courses = courseService.getActiveCourses();
         if (courses.isEmpty()) {
             System.out.println("No active courses available. Please add a course first.");
             return;
@@ -120,7 +120,7 @@ class EnrollmentMenuHandler {
 
     private void viewAllEnrollments() {
         console.printHeader("All Enrollments");
-        ArrayList<Enrollment> enrollments = enrollmentService.getAllEnrollments();
+        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
 
         if (enrollments.isEmpty()) {
             System.out.println("No enrollments found in the system.");
@@ -138,7 +138,7 @@ class EnrollmentMenuHandler {
             Student student = studentService.getStudentById(studentId);
             System.out.println("\nEnrollments for: " + student.getDisplayName());
 
-            ArrayList<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudent(studentId);
+            List<Enrollment> enrollments = enrollmentService.getEnrollmentsByStudent(studentId);
             if (enrollments.isEmpty()) {
                 System.out.println("No enrollments found for this student.");
                 return;
@@ -158,7 +158,7 @@ class EnrollmentMenuHandler {
             Course course = courseService.getCourseById(courseId);
             System.out.println("\nEnrollments for: " + course.getCourseName());
 
-            ArrayList<Enrollment> enrollments = enrollmentService.getEnrollmentsByCourse(courseId);
+            List<Enrollment> enrollments = enrollmentService.getEnrollmentsByCourse(courseId);
             if (enrollments.isEmpty()) {
                 System.out.println("No enrollments found for this course.");
                 return;
@@ -196,7 +196,7 @@ class EnrollmentMenuHandler {
         }
     }
 
-    private void displayEnrollmentTable(ArrayList<Enrollment> enrollments) {
+    private void displayEnrollmentTable(List<Enrollment> enrollments) {
         System.out.println("\nTotal Enrollments: " + enrollments.size());
         System.out.println("------------------------------------------------------------------------------");
         System.out.println("| ID | Student ID | Course ID | Enrollment Date | Status |");

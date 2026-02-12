@@ -5,7 +5,7 @@ import com.airtribe.learntrack.exception.EntityNotFoundException;
 import com.airtribe.learntrack.exception.InvalidInputException;
 import com.airtribe.learntrack.service.StudentService;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles all student management menu operations.
@@ -91,7 +91,7 @@ class StudentMenuHandler {
 
     private void viewAllStudents() {
         console.printHeader("All Students");
-        ArrayList<Student> students = studentService.getAllStudents();
+        List<Student> students = studentService.getAllStudents();
 
         if (students.isEmpty()) {
             System.out.println("No students found in the system.");
@@ -104,11 +104,16 @@ class StudentMenuHandler {
         System.out.println("--------------------------------------------------------------------------------");
 
         for (Student student : students) {
-                    System.out.println(
+            String email = student.getEmail();
+            String batch = student.getBatch();
+            String emailDisplay = (email == null || email.isEmpty()) ? "N/A" : email;
+            String batchDisplay = (batch == null || batch.isEmpty()) ? "N/A" : batch;
+
+            System.out.println(
                 "| " + student.getId()
                 + " | " + student.getDisplayName()
-                + " | " + student.getEmail()
-                + " | " + student.getBatch()
+                + " | " + emailDisplay
+                + " | " + batchDisplay
                 + " | " + student.isActive()
                 + " |"
             );
@@ -141,8 +146,13 @@ class StudentMenuHandler {
             System.out.println("\nEnter new values (press Enter to keep current value):");
             String firstName = console.getStringInput("First Name [" + existing.getFirstName() + "]: ");
             String lastName = console.getStringInput("Last Name [" + existing.getLastName() + "]: ");
-            String email = console.getStringInput("Email [" + existing.getEmail() + "]: ");
-            String batch = console.getStringInput("Batch [" + existing.getBatch() + "]: ");
+            String existingEmail = existing.getEmail();
+            String existingBatch = existing.getBatch();
+            String emailDisplay = (existingEmail == null || existingEmail.isEmpty()) ? "N/A" : existingEmail;
+            String batchDisplay = (existingBatch == null || existingBatch.isEmpty()) ? "N/A" : existingBatch;
+
+            String email = console.getStringInput("Email [" + emailDisplay + "]: ");
+            String batch = console.getStringInput("Batch [" + batchDisplay + "]: ");
 
             Student updated = studentService.updateStudent(id, firstName, lastName, email, batch);
 
@@ -186,8 +196,10 @@ class StudentMenuHandler {
         System.out.println("+--------------------------------------+");
         System.out.println("| ID:         " + student.getId());
         System.out.println("| Name:       " + student.getDisplayName());
-        System.out.println("| Email:      " + (student.getEmail().isEmpty() ? "N/A" : student.getEmail()));
-        System.out.println("| Batch:      " + (student.getBatch().isEmpty() ? "N/A" : student.getBatch()));
+        String email = student.getEmail();
+        String batch = student.getBatch();
+        System.out.println("| Email:      " + (email == null || email.isEmpty() ? "N/A" : email));
+        System.out.println("| Batch:      " + (batch == null || batch.isEmpty() ? "N/A" : batch));
         System.out.println("| Status:     " + (student.isActive() ? "Active" : "Inactive"));
         System.out.println("+--------------------------------------+");
     }

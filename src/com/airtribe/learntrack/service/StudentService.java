@@ -7,6 +7,7 @@ import com.airtribe.learntrack.util.IdGenerator;
 import com.airtribe.learntrack.util.InputValidator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service class for managing Student entities.
@@ -14,8 +15,8 @@ import java.util.ArrayList;
  */
 public class StudentService {
 
-    // In-memory storage using ArrayList
-    private ArrayList<Student> students;
+    // In-memory storage using List
+    private List<Student> students;
 
     /**
      * Constructor initializes the students list
@@ -53,7 +54,7 @@ public class StudentService {
 
         int id = IdGenerator.getNextStudentId();
         Student student = new Student(id, firstName, lastName, email, batch, true);
-        students.add(student);
+        getStudents().add(student);
         return student;
     }
 
@@ -65,7 +66,7 @@ public class StudentService {
      * @throws EntityNotFoundException if student is not found
      */
     public Student getStudentById(int id) throws EntityNotFoundException {
-        for (Student student : students) {
+        for (Student student : getStudents()) {
             if (student.getId() == id) {
                 return student;
             }
@@ -76,20 +77,20 @@ public class StudentService {
     /**
      * Retrieves all students in the system.
      * 
-     * @return ArrayList of all students
+     * @return List of all students
      */
-    public ArrayList<Student> getAllStudents() {
-        return new ArrayList<>(students);
+    public List<Student> getAllStudents() {
+        return new ArrayList<>(getStudents());
     }
 
     /**
      * Retrieves only active students.
      * 
-     * @return ArrayList of active students
+     * @return List of active students
      */
-    public ArrayList<Student> getActiveStudents() {
+    public List<Student> getActiveStudents() {
         ArrayList<Student> activeStudents = new ArrayList<>();
-        for (Student student : students) {
+        for (Student student : getStudents()) {
             if (student.isActive()) {
                 activeStudents.add(student);
             }
@@ -110,22 +111,16 @@ public class StudentService {
      */
     public Student updateStudent(int id, String firstName, String lastName, String email, String batch) 
             throws EntityNotFoundException {
-        Student student = getStudentById(id);
-        
-        if (InputValidator.isNonEmpty(firstName)) {
-            student.setFirstName(firstName);
-        }
-        if (InputValidator.isNonEmpty(lastName)) {
-            student.setLastName(lastName);
-        }
-        if (InputValidator.isNonEmpty(email)) {
-            student.setEmail(email);
-        }
-        if (InputValidator.isNonEmpty(batch)) {
-            student.setBatch(batch);
-        }
-        
-        return student;
+        Student existing = getStudentById(id);
+
+        String updatedFirstName = InputValidator.isNonEmpty(firstName) ? firstName : existing.getFirstName();
+        String updatedLastName = InputValidator.isNonEmpty(lastName) ? lastName : existing.getLastName();
+        String updatedEmail = InputValidator.isNonEmpty(email) ? email : existing.getEmail();
+        String updatedBatch = InputValidator.isNonEmpty(batch) ? batch : existing.getBatch();
+
+        Student updated = new Student(existing.getId(), updatedFirstName, updatedLastName, updatedEmail, updatedBatch, existing.isActive());
+        replaceStudent(updated);
+        return updated;
     }
 
     /**
@@ -138,8 +133,9 @@ public class StudentService {
      */
     public Student deactivateStudent(int id) throws EntityNotFoundException {
         Student student = getStudentById(id);
-        student.setActive(false);
-        return student;
+        Student updated = student.withActive(false);
+        replaceStudent(updated);
+        return updated;
     }
 
     /**
@@ -151,7 +147,22 @@ public class StudentService {
      */
     public Student reactivateStudent(int id) throws EntityNotFoundException {
         Student student = getStudentById(id);
-        student.setActive(true);
-        return student;
+        Student updated = student.withActive(true);
+        replaceStudent(updated);
+        return updated;
+    }
+
+    private List<Student> getStudents() {
+        return students;
+    }
+
+    private void replaceStudent(Student updated) throws EntityNotFoundException {
+        for (int i = 0; i < getStudents().size(); i++) {
+            if (getStudents().get(i).getId() == updated.getId()) {
+                getStudents().set(i, updated);
+                return;
+            }
+        }
+        throw EntityNotFoundException.studentNotFound(updated.getId());
     }
 }

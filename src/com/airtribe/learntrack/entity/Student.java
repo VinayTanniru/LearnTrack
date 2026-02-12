@@ -20,8 +20,8 @@ public class Student extends Person {
      * Parameterized constructor with all fields including email
      */
     public Student(int id, String firstName, String lastName, String email, String batch, boolean active) {
-        super(id, firstName, lastName, email);
-        this.batch = batch;
+        super(validateId(id), requireNonEmpty(firstName, "First Name"), requireNonEmpty(lastName, "Last Name"), normalizeOptional(email));
+        this.batch = normalizeOptional(batch);
         this.active = active;
     }
 
@@ -29,8 +29,8 @@ public class Student extends Person {
      * Constructor without email (demonstrates constructor overloading)
      */
     public Student(int id, String firstName, String lastName, String batch) {
-        super(id, firstName, lastName);
-        this.batch = batch;
+        super(validateId(id), requireNonEmpty(firstName, "First Name"), requireNonEmpty(lastName, "Last Name"));
+        this.batch = normalizeOptional(batch);
         this.active = true;
     }
 
@@ -38,8 +38,8 @@ public class Student extends Person {
      * Constructor with basic info only
      */
     public Student(int id, String firstName, String lastName) {
-        super(id, firstName, lastName);
-        this.batch = "";
+        super(validateId(id), requireNonEmpty(firstName, "First Name"), requireNonEmpty(lastName, "Last Name"));
+        this.batch = null;
         this.active = true;
     }
 
@@ -49,15 +49,44 @@ public class Student extends Person {
     }
 
     public void setBatch(String batch) {
-        this.batch = batch;
+        String normalized = normalizeOptional(batch);
+        if (normalized != null) {
+            this.batch = normalized;
+        }
     }
 
     public boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    /**
+     * Returns a new Student instance with the updated active status.
+     * Implements immutability for state changes.
+     */
+    public Student withActive(boolean active) {
+        return new Student(this.getId(), this.getFirstName(), this.getLastName(), this.getEmail(), this.batch, active);
+    }
+
+    private static int validateId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("id must be positive");
+        }
+        return id;
+    }
+
+    private static String requireNonEmpty(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException(fieldName + " cannot be null or empty");
+        }
+        return value.trim();
+    }
+
+    private static String normalizeOptional(String value) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 
     /**
@@ -74,11 +103,13 @@ public class Student extends Person {
 
     @Override
     public String toString() {
+        String email = getEmail();
+        String emailDisplay = (email == null || email.isEmpty()) ? "N/A" : email;
         return "Student{" +
                 "id=" + getId() +
                 ", firstName='" + getFirstName() + '\'' +
                 ", lastName='" + getLastName() + '\'' +
-                ", email='" + getEmail() + '\'' +
+                ", email='" + emailDisplay + '\'' +
                 ", batch='" + batch + '\'' +
                 ", active=" + active +
                 '}';

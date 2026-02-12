@@ -4,7 +4,7 @@ package com.airtribe.learntrack.entity;
  * Course entity class representing a course in the system.
  */
 public class Course {
-    private int id;
+    private long id;
     private String courseName;
     private String description;
     private int durationInWeeks;
@@ -20,7 +20,7 @@ public class Course {
     /**
      * Parameterized constructor with all fields
      */
-    public Course(int id, String courseName, String description, int durationInWeeks, boolean active) {
+    public Course(long id, String courseName, String description, int durationInWeeks, boolean active) {
         this.id = id;
         this.courseName = courseName;
         this.description = description;
@@ -31,7 +31,7 @@ public class Course {
     /**
      * Constructor with basic fields (active defaults to true)
      */
-    public Course(int id, String courseName, String description, int durationInWeeks) {
+    public Course(long id, String courseName, String description, int durationInWeeks) {
         this.id = id;
         this.courseName = courseName;
         this.description = description;
@@ -40,7 +40,7 @@ public class Course {
     }
 
     // Getters and Setters
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -49,6 +49,9 @@ public class Course {
     }
 
     public void setCourseName(String courseName) {
+        if(!validateString(courseName)) {
+            throw new IllegalArgumentException("Course name cannot be null or empty");
+        }
         this.courseName = courseName;
     }
 
@@ -57,6 +60,9 @@ public class Course {
     }
 
     public void setDescription(String description) {
+        if(!validateString(description)) {
+            throw new IllegalArgumentException("Description cannot be null or empty");
+        }
         this.description = description;
     }
 
@@ -65,6 +71,9 @@ public class Course {
     }
 
     public void setDurationInWeeks(int durationInWeeks) {
+        if(durationInWeeks <= 0) {
+            throw new IllegalArgumentException("Duration must be positive");
+        }
         this.durationInWeeks = durationInWeeks;
     }
 
@@ -74,6 +83,10 @@ public class Course {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    private boolean validateString(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 
     /**

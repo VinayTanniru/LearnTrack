@@ -7,6 +7,7 @@ import com.airtribe.learntrack.util.IdGenerator;
 import com.airtribe.learntrack.util.InputValidator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Service class for managing Course entities.
@@ -14,8 +15,8 @@ import java.util.ArrayList;
  */
 public class CourseService {
 
-    // In-memory storage using ArrayList
-    private ArrayList<Course> courses;
+    // In-memory storage using List
+    private List<Course> courses;
 
     /**
      * Constructor initializes the courses list
@@ -73,18 +74,18 @@ public class CourseService {
     /**
      * Retrieves all courses in the system.
      * 
-     * @return ArrayList of all courses
+     * @return List of all courses
      */
-    public ArrayList<Course> getAllCourses() {
+    public List<Course> getAllCourses() {
         return new ArrayList<>(courses);
     }
 
     /**
      * Retrieves only active courses.
      * 
-     * @return ArrayList of active courses
+     * @return List of active courses
      */
-    public ArrayList<Course> getActiveCourses() {
+    public List<Course> getActiveCourses() {
         ArrayList<Course> activeCourses = new ArrayList<>();
         for (Course course : courses) {
             if (course.isActive()) {
@@ -108,7 +109,7 @@ public class CourseService {
             throws EntityNotFoundException {
         Course course = getCourseById(id);
         
-        if (InputValidator.isNonEmpty(courseName)) {
+        if (course != null &&InputValidator.isNonEmpty(courseName)) {
             course.setCourseName(courseName);
         }
         if (InputValidator.isNonEmpty(description)) {

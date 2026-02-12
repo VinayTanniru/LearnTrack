@@ -64,7 +64,9 @@ class ConsoleHelper {
      */
     static String truncate(String str, int maxLength) {
         if (str == null) return "";
+        if (maxLength <= 0) return "";
         if (str.length() <= maxLength) return str;
+        if (maxLength <= 3) return str.substring(0, maxLength);
         return str.substring(0, maxLength - 3) + "...";
     }
 }

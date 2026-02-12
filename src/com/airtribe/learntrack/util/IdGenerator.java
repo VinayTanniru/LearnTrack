@@ -1,15 +1,17 @@
 package com.airtribe.learntrack.util;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Utility class for generating unique IDs for entities.
  */
 public class IdGenerator {
 
     // Static counters for each entity type
-    private static int studentIdCounter = 0;
-    private static int courseIdCounter = 0;
-    private static int enrollmentIdCounter = 0;
-    private static int trainerIdCounter = 0;
+    private static final AtomicInteger studentIdCounter = new AtomicInteger(0);
+    private static final AtomicInteger courseIdCounter = new AtomicInteger(0);
+    private static final AtomicInteger enrollmentIdCounter = new AtomicInteger(0);
+    private static final AtomicInteger trainerIdCounter = new AtomicInteger(0);
 
     // Private constructor to prevent instantiation
     private IdGenerator() {
@@ -21,7 +23,7 @@ public class IdGenerator {
      * @return Next student ID
      */
     public static int getNextStudentId() {
-        return ++studentIdCounter;
+        return studentIdCounter.incrementAndGet();
     }
 
     /**
@@ -29,7 +31,7 @@ public class IdGenerator {
      * @return Next course ID
      */
     public static int getNextCourseId() {
-        return ++courseIdCounter;
+        return courseIdCounter.incrementAndGet();
     }
 
     /**
@@ -37,7 +39,7 @@ public class IdGenerator {
      * @return Next enrollment ID
      */
     public static int getNextEnrollmentId() {
-        return ++enrollmentIdCounter;
+        return enrollmentIdCounter.incrementAndGet();
     }
 
     /**
@@ -45,6 +47,6 @@ public class IdGenerator {
      * @return Next trainer ID
      */
     public static int getNextTrainerId() {
-        return ++trainerIdCounter;
+        return trainerIdCounter.incrementAndGet();
     }
 }

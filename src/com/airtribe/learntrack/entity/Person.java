@@ -33,7 +33,7 @@ public class Person {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = "";
+        this.email = null;
     }
 
     // Getters and Setters
@@ -69,7 +69,7 @@ public class Person {
      * Returns a display-friendly name.
      * This method is designed to be overridden by subclasses (polymorphism).
      */
-    public String getDisplayName() {
+    protected String getDisplayName() {
         return firstName + " " + lastName;
     }
 

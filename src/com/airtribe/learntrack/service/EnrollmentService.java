@@ -5,9 +5,12 @@ import com.airtribe.learntrack.entity.EnrollmentStatus;
 import com.airtribe.learntrack.exception.EntityNotFoundException;
 import com.airtribe.learntrack.exception.InvalidInputException;
 import com.airtribe.learntrack.util.IdGenerator;
+import com.airtribe.learntrack.util.InputValidator;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Service class for managing Enrollment entities.
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 public class EnrollmentService {
 
     // In-memory storage using ArrayList
-    private ArrayList<Enrollment> enrollments;
+    private List<Enrollment> enrollments;
 
     // Reference to other services for validation
     private StudentService studentService;
@@ -42,9 +45,15 @@ public class EnrollmentService {
      */
     public Enrollment enrollStudent(int studentId, int courseId) 
             throws EntityNotFoundException, InvalidInputException {
+        if (!InputValidator.isPositiveNumber(studentId)) {
+            throw InvalidInputException.invalidNumber("Student ID");
+        }
+        if (!InputValidator.isPositiveNumber(courseId)) {
+            throw InvalidInputException.invalidNumber("Course ID");
+        }
+
         // Validate that student exists
         studentService.getStudentById(studentId);
-        
         // Validate that course exists
         courseService.getCourseById(courseId);
         
@@ -58,7 +67,7 @@ public class EnrollmentService {
         }
 
         int id = IdGenerator.getNextEnrollmentId();
-        String enrollmentDate = LocalDate.now().toString();
+        LocalDate enrollmentDate = LocalDate.now();
         Enrollment enrollment = new Enrollment(id, studentId, courseId, enrollmentDate, EnrollmentStatus.ACTIVE);
         enrollments.add(enrollment);
         return enrollment;
@@ -83,20 +92,20 @@ public class EnrollmentService {
     /**
      * Retrieves all enrollments in the system.
      * 
-     * @return ArrayList of all enrollments
+     * @return List of all enrollments
      */
-    public ArrayList<Enrollment> getAllEnrollments() {
-        return new ArrayList<>(enrollments);
+    public List<Enrollment> getAllEnrollments() {
+        return Collections.unmodifiableList(enrollments);
     }
 
     /**
      * Retrieves all enrollments for a specific student.
      * 
      * @param studentId The student ID to search for
-     * @return ArrayList of enrollments for the student
+     * @return List of enrollments for the student
      * @throws EntityNotFoundException if student is not found
      */
-    public ArrayList<Enrollment> getEnrollmentsByStudent(int studentId) throws EntityNotFoundException {
+    public List<Enrollment> getEnrollmentsByStudent(int studentId) throws EntityNotFoundException {
         // Validate that student exists
         studentService.getStudentById(studentId);
         
@@ -113,10 +122,10 @@ public class EnrollmentService {
      * Retrieves all enrollments for a specific course.
      * 
      * @param courseId The course ID to search for
-     * @return ArrayList of enrollments for the course
+     * @return List of enrollments for the course
      * @throws EntityNotFoundException if course is not found
      */
-    public ArrayList<Enrollment> getEnrollmentsByCourse(int courseId) throws EntityNotFoundException {
+    public List<Enrollment> getEnrollmentsByCourse(int courseId) throws EntityNotFoundException {
         // Validate that course exists
         courseService.getCourseById(courseId);
         

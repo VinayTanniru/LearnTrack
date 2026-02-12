@@ -5,7 +5,7 @@ import com.airtribe.learntrack.exception.EntityNotFoundException;
 import com.airtribe.learntrack.exception.InvalidInputException;
 import com.airtribe.learntrack.service.CourseService;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles all course management menu operations.
@@ -89,7 +89,7 @@ class CourseMenuHandler {
 
     private void viewAllCourses() {
         console.printHeader("All Courses");
-        ArrayList<Course> courses = courseService.getAllCourses();
+        List<Course> courses = courseService.getAllCourses();
 
         if (courses.isEmpty()) {
             System.out.println("No courses found in the system.");

@@ -1,5 +1,7 @@
 package com.airtribe.learntrack.entity;
 
+import java.time.LocalDate;
+
 /**
  * Enrollment entity class representing a student's enrollment in a course.
  * Links students to courses with enrollment date and status tracking.
@@ -8,7 +10,7 @@ public class Enrollment {
     private int id;
     private int studentId;
     private int courseId;
-    private String enrollmentDate;
+    private LocalDate enrollmentDate;
     private EnrollmentStatus status;
 
     /**
@@ -21,7 +23,7 @@ public class Enrollment {
     /**
      * Parameterized constructor with all fields
      */
-    public Enrollment(int id, int studentId, int courseId, String enrollmentDate, EnrollmentStatus status) {
+    public Enrollment(int id, int studentId, int courseId, LocalDate enrollmentDate, EnrollmentStatus status) {
         this.id = id;
         this.studentId = studentId;
         this.courseId = courseId;
@@ -32,7 +34,7 @@ public class Enrollment {
     /**
      * Constructor with default ACTIVE status
      */
-    public Enrollment(int id, int studentId, int courseId, String enrollmentDate) {
+    public Enrollment(int id, int studentId, int courseId, LocalDate enrollmentDate) {
         this.id = id;
         this.studentId = studentId;
         this.courseId = courseId;
@@ -61,11 +63,11 @@ public class Enrollment {
         this.courseId = courseId;
     }
 
-    public String getEnrollmentDate() {
+    public LocalDate getEnrollmentDate() {
         return enrollmentDate;
     }
 
-    public void setEnrollmentDate(String enrollmentDate) {
+    public void setEnrollmentDate(LocalDate enrollmentDate) {
         this.enrollmentDate = enrollmentDate;
     }
 
